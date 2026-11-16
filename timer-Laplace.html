@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html><head>
+
+    <meta charset="UTF-8">
+ 
+<title>Exam timer</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>window.MathJax = { tex: { tags: "ams", }, }; </script> 
+ <script async='async' id='MathJax-script' src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js' type='text/javascript'></script> 
+
+
+<style type="text/css">
+	body {
+		text-align: center;
+		color: white;
+		background-color: black;
+	}
+	textarea {
+		border-color: #333333;
+		background-color: #000000;
+		color: #ffffff;
+	}
+	input {
+		border-color: #181818;
+		background-color: #333333;
+		color: #ffffff;
+	}
+	p {
+		font-family:"Verdana";
+	} 
+	a:link {
+	  color: #505050;
+	}
+	a:visited {
+	  color: #505050;
+	}
+	
+</style>
+</head>
+<body onLoad='loop()' >
+<script>
+"use strict"
+
+function pluralize(n, s) { return n + ' ' + (n == 1 ? s : s + 's'); }
+
+function update() {
+	var now = new Date(),
+		ampm = $("#ampm").val(),
+		hourTime0 = Number($("#hours")[0].value),
+		hourTime = hourTime0 + (ampm == "am" || (ampm == "pm" && hourTime0 == 12) ? 0 : 12),
+		minuteTime = Number($("#minutes")[0].value),
+		endExam = new Date();
+	endExam.setHours(hourTime, minuteTime);
+	var	msecsLeft = endExam - now,
+		hoursLeft = Math.floor(msecsLeft / 3600000),
+		minutesLeft = Math.floor(msecsLeft / 60000 % 60),
+		hourString = pluralize(hoursLeft, 'hour'),
+		minuteString = pluralize(minutesLeft, 'minute');
+	if (ampm) {
+		$("#mathjaxecho").html($('textarea#mathjaxinput').val());
+		MathJax.typeset();
+		if (msecsLeft < 0) $("#timesentence").html("<b>Time's up!</b>");
+		else if (hoursLeft == 0) {
+			if (minutesLeft == 0) 
+				$("#timesentence").html('You have less than 1 minute remaining.');
+			else $("#timesentence").html('You have ' + minuteString + ' remaining.');
+		}
+		else $("#timesentence")
+			.html('You have ' + hourString + ' and ' + minuteString + ' remaining.');
+	}
+}
+
+function loop() { update(); setTimeout(loop, 10000); }
+
+$(function() {
+	$(".updateme").bind("keyup change", update);
+	loop();
+});
+</script>
+
+<form>
+<p>Exam ends at: <input id="hours" class="updateme" size="2" maxlength="2" type="text" value="1"> : 
+<input id="minutes" class="updateme" size="2" maxlength="2" type="text" value="45">
+<select id="ampm" class="updateme">
+<option value="pm">PM</option><option value="am">AM</option>
+</select></p>
+</form>
+
+<p id="timesentence"></p>
+
+<p id="mathjaxecho"></p>
+
+
+
+<p style="margin-top: 10cm;"><button onClick='loop()'>Update MathJax</button></p>
+
+<textarea rows="10" cols="50" id="mathjaxinput">
+<font size=-1>If \(\alpha\), \(\beta\), \(a\), and \(k\) are real numbers, \(n\geq 0\) is an integer, \(f(t)\) and \(g(t)\) are functions with  Laplace transforms, \(F(s)\) is the Laplace transform of some function, and \(y\) is a differentiable function such that both \(y\) and \(\frac{dy}{dt}\) have Laplace transforms, then
+\[\begin{aligned}
+\mathcal{L} \Bigl \{\frac {dy}{dt}\Bigr \}&=s\mathcal{L} \{y(t)\}-y(0) 
+\\\mathcal{L} \{f(t)\}&=\int _0^\infty e^{-st}\,f(t)\,dt 
+\\\mathcal{L} \{\alpha f(t)+\beta g(t)\} &= \alpha \mathcal{L} \{f(t)\}+\beta \mathcal{L} \{g(t)\} 
+\\ \mathcal{L} \{t^n\}&=\frac {n!}{s^{n+1}},\qquad \qquad n\geq 0 
+\\ \mathcal{L} \{e^{at}\}&=\frac {1}{s-a}
+\\ \mathcal{L} \{\sin (kt)\}&=\frac {k}{s^2+k^2}
+\\ \mathcal{L} \{\cos (kt)\}&=\frac {s}{s^2+k^2}
+\\\mathcal{L} \{f(t)\}=F(s)&\text { if and only if }\mathcal{L} ^{-1}\{F(s)\}=f(t) 
+\\\mathcal{L} \biggl \{\int _0^t f(r)\,g(t-r)\,dr\biggr \}&=\mathcal{L} \{f(t)\}\,\mathcal{L} \{g(t)\} 
+\end{aligned}
+\qquad\quad
+\begin{aligned}
+\\\mathcal{L} ^{-1}\{F(s)\}&=e^{at}\mathcal{L} ^{-1}\{F(s+a)\} 
+\\\text {If }\mathcal{L} \{f(t)\}=F(s)&\text { then }\mathcal{L} \{e^{at}f(t)\}=F(s-a) \hskip-5em
+\\ \mathcal{L} \{t\,f(t)\} &= -\frac {d}{ds}\mathcal{L} \{f(t)\} 
+\\ \mathcal{L} \{t\sin kt\} &= \frac {2ks}{(s^2+k^2)^2} 
+\\ \mathcal{L} \{t\cos kt\} &= \frac {s^2-k^2}{(s^2+k^2)^2} 
+\\ \mathcal{L} \{\sin kt-t\cos kt\} &= \frac {2k^3}{(s^2+k^2)^2} 
+\\\mathcal{L} \{\mathcal{U} (t-c)\,g(t-c)\} &= e^{-cs}\mathcal{L} \{g(t)\} ,& c>0
+\\ \mathcal{L} \{\mathcal{U} (t-c)\,f(t)\} &= e^{-cs}\mathcal{L} \{f(t+c)\} ,& c>0
+\\ \mathcal{L} \{\delta (t-c)\} &= e^{-cs},& c>0 \end{aligned}
+\]</font>
+</textarea>
+
+
+</body>
+</html>
