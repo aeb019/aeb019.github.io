@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html><head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>window.MathJax = { tex: { tags: "ams", }, }; </script> 
+ <script async='async' id='MathJax-script' src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js' type='text/javascript'></script> 
+
+
+<style type="text/css">
+	body {
+		text-align: center;
+		color: white;
+		background-color: black;
+		font-family:"Verdana";
+	}
+	textarea {
+		border-color: #333333;
+		background-color: #000000;
+		color: #ffffff;
+	}
+	input {
+		border-color: #181818;
+		background-color: #333333;
+		color: #ffffff;
+	}
+	a:link {
+	  color: #505050;
+	}
+	a:visited {
+	  color: #505050;
+	}
+	td {
+  		vertical-align: top; /* Options: top, middle, bottom, baseline */
+	}
+	
+</style>
+</head>
+<body>
+<script>
+"use strict"
+
+function update() {
+
+	var MAsString = $("#M")[0].value;
+	var NAsString = $("#N")[0].value;
+	var EAsString = $("#E")[0].value;
+	var M = MAsString*1;
+	var N = NAsString*1;
+	var E = EAsString*1;
+	// We need the *1 to tell Javascript to treat X, Y as numbers rather than strings, so that it will treat 150 as greater than 99.
+	
+	var K = Math.floor(Math.log(E)/Math.log(2))+1;
+	const MPowers = [];
+	const TwoPowers = [];
+	MPowers[0] = M;
+	TwoPowers[0] = 1;
+	for (let i = 1; i <= K; i++) {
+		  MPowers[i] = MPowers[i-1]*MPowers[i-1] % N;
+		  TwoPowers[i] = TwoPowers[i-1]*2;
+	}
+	// TwoPowers[i] = 2^i
+	// MPowers[i] = M^{2^i} mod N
+	var MEstring = "";
+	var ME = 1;
+	var Etemp = E;
+	for (let i=K; i>=0; i--) {
+		if (Etemp >= TwoPowers[i]) 
+		{
+			 ME = ME*MPowers[i] % N;
+			 Etemp = Etemp-TwoPowers[i];
+			 MEstring = MEstring+"&ZeroWidthSpace;*"+MAsString+"<sup>"+TwoPowers[i]+"</sup>";
+		}
+	}
+	
+	
+
+	$("#result").html(M+'<sup>'+EAsString+'</sup> mod '+N+'='+ME);
+	
+	var showyourwork;
+	showyourwork = "<table border=0 cellspacing=0 cellpadding=1>";
+	for (let i=0; i<K; i++) {
+		showyourwork = showyourwork + '<tr><td align=right>'+MAsString+'<sup>'+TwoPowers[i]+'</sup></td><td>&equiv;</td><td>'+MPowers[i]+' mod '+NAsString+'</td></tr>';
+	}
+	showyourwork = showyourwork + '<tr><td align=right>'+M+'<sup>'+E+'</sup></td><td>=</td><td>' +MEstring.substring(17)+'</td></tr><tr><td></td><td>&equiv;</td><td>'+ME+' mod '+NAsString+'</td></tr></table>';
+	
+	
+	$("#timesentence").html(showyourwork);
+	
+	
+	
+
+ 	var MAsString = $("#Mb")[0].value;
+ 	var NAsString = $("#Nb")[0].value;
+ 	var EAsString = $("#Eb")[0].value;
+	var M = MAsString*1;
+	var N = NAsString*1;
+	var E = EAsString*1;
+	// We need the *1 to tell Javascript to treat X, Y as numbers rather than strings, so that it will treat 150 as greater than 99.
+	
+	var K = Math.floor(Math.log(E)/Math.log(2))+1;
+	const MPowersb = [];
+	const TwoPowersb = [];
+	MPowersb[0] = M;
+	TwoPowersb[0] = 1;
+	for (let i = 1; i <= K; i++) {
+		  MPowersb[i] = MPowersb[i-1]*MPowersb[i-1] % N;
+		  TwoPowersb[i] = TwoPowersb[i-1]*2;
+	}
+	// TwoPowersb[i] = 2^i
+	// MPowersb[i] = M^{2^i} mod N
+	var MEstring = "";
+	var ME = 1;
+	var Etemp = E;
+	for (let i=K; i>=0; i--) {
+		if (Etemp >= TwoPowersb[i]) 
+		{
+			 ME = ME*MPowersb[i] % N;
+			 Etemp = Etemp-TwoPowersb[i];
+			 MEstring = MEstring+"&ZeroWidthSpace;*"+MAsString+"<sup>"+TwoPowersb[i]+"</sup>";
+		}
+	}
+	
+	
+
+	$("#resultb").html(M+'<sup>'+EAsString+'</sup> mod '+N+'='+ME);
+	
+	var showyourwork;
+	showyourwork = "<table border=0 cellspacing=0 cellpadding=1>";
+	for (let i=0; i<K; i++) {
+		showyourwork = showyourwork + '<tr><td align=right>'+MAsString+'<sup>'+TwoPowersb[i]+'</sup></td><td>&equiv;</td><td>'+MPowersb[i]+' mod '+NAsString+'</td></tr>';
+	}
+	showyourwork = showyourwork + '<tr><td align=right>'+M+'<sup>'+E+'</sup></td><td>=</td><td>' +MEstring.substring(17)+'</td></tr><tr><td></td><td>&equiv;</td><td>'+ME+' mod '+NAsString+'</td></tr></table>';
+	
+	
+ 	$("#timesentenceb").html(showyourwork);
+	
+	
+	
+	}
+
+
+</script>
+
+<h1>Computing powers modulo integers</h1>
+
+<center>
+<p><button onClick='update()'>Compute modular powers</button></p>
+<form>
+<p>
+<table>
+<tr>
+<td>
+<input id="M" size="5" type="text"><sup><input id="E" size="5" type="text" value=257></sup> mod <input id="N" size="5" type="text" value=611161></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<input id="Mb" size="5" type="text"><sup><input id="Eb" size="5" type="text" value=410321></sup> mod <input id="Nb" size="5" type="text" value=611161>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td>
+<span id="result"></span> </td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<span id="resultb"></span> </td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td>
+<span id="timesentence"></span>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<span id="timesentenceb"></span>
+</td>
+</tr>
+</table>
+</form>
+
+
+
+
+</center>
+
+</body>
+</html>

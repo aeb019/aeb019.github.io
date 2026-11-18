@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html><head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>window.MathJax = { tex: { tags: "ams", }, }; </script> 
+ <script async='async' id='MathJax-script' src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js' type='text/javascript'></script> 
+
+
+<style type="text/css">
+	body {
+		text-align: center;
+		color: white;
+		background-color: black;
+	}
+	textarea {
+		border-color: #333333;
+		background-color: #000000;
+		color: #ffffff;
+	}
+	input {
+		border-color: #181818;
+		background-color: #333333;
+		color: #ffffff;
+	}
+	p {
+		font-family:"Verdana";
+	} 
+	a:link {
+	  color: #505050;
+	}
+	a:visited {
+	  color: #505050;
+	}
+	
+</style>
+</head>
+<body>
+<script>
+"use strict"
+
+function update() {
+
+	var A = $("#A")[0].value;
+	var B = $("#B")[0].value;
+	var X = A*1;
+	var Y = B*1;
+	// We need the *1 to tell Javascript to treat X, Y as numbers rather than strings, so that it will treat 150 as greater than 99.
+	
+
+	var ACoeffX = 1;
+	var BCoeffX = 0;
+	var ACoeffY = 0;
+	var BCoeffY = 1;
+	
+	while (X != Y) {
+		if ((X < Y) && (X>0)){
+			Y = Y - X;
+			ACoeffY = ACoeffY + ACoeffX;
+			BCoeffY = BCoeffY + BCoeffX;
+		}
+		else if (Y<X && Y>0) {
+			X = X - Y;
+			ACoeffX = ACoeffY + ACoeffX;
+			BCoeffX = BCoeffY + BCoeffX;
+		}
+		else { }
+	}
+	
+	
+	$("#timesentence").html(X+'='+ACoeffX+'&thinsp;&middot;&thinsp;'+A+ '&minus;'+BCoeffX + '&thinsp;&middot;&thinsp;'+B+' and '+Y+'='+BCoeffY+'&thinsp;&middot;&thinsp;'+B+ '&minus;'+ACoeffY + '&thinsp;&middot;&thinsp;'+A);
+}
+
+
+</script>
+
+<form>
+<p><input id="A" size="5" type="text">
+<input id="B" size="5" type="text"></p>
+</form>
+
+<p id="timesentence"></p>
+
+
+
+<p><button onClick='update()'>Compute GCD</button></p>
+
+</body>
+</html>
